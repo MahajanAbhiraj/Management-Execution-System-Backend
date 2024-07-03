@@ -9,6 +9,7 @@ const finalsRoute = require('./routes/finals');
 const usersRoute = require('./routes/users');
 const fgsRoute = require('./routes/fgs');
 const PackagesRoute = require('./routes/Packages');
+const packagelogsRoute = require('./routes/packagelogs');
 
 //console.log('ingredientsRoute:', ingredientsRoute); // Debugging line
 
@@ -27,6 +28,7 @@ app.use('/finals' , finalsRoute);
 app.use('/users' , usersRoute);
 app.use('/fgs' , fgsRoute);
 app.use('/Packages' , PackagesRoute);
+app.use('/packagelogs' , packagelogsRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

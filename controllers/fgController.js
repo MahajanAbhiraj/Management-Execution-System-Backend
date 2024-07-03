@@ -10,6 +10,19 @@ exports.getAllFGs = async (req, res) => {
   }
 };
 
+// Get FG by recipeName
+exports.getFGByRecipeName = async (req, res) => {
+  try {
+    const fg = await FG.findOne({ recipeName: req.params.recipeName });
+    if (fg == null) {
+      return res.status(404).json({ message: 'FG not found' });
+    }
+    res.json(fg);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Create new FG
 exports.createFG = async (req, res) => {
   const fg = new FG({
@@ -26,35 +39,38 @@ exports.createFG = async (req, res) => {
   }
 };
 
-// Update FG
+// Update FG by recipeName
 exports.updateFG = async (req, res) => {
   try {
-    const fg = await FG.findById(req.params.id);
-    if (fg == null) {
-      return res.status(404).json({ message: 'FG not found' });
-    }
+    const fg = await FG.findOne({ recipeName: req.body.recipeName });
 
-    if (req.body.recipeName != null) {
-      fg.recipeName = req.body.recipeName;
+    if (fg) {
+      // FG with the recipeName exists, update TotalWeight
+      fg.TotalWeight += req.body.TotalWeight;
+      if (req.body.ingredientsUsed != null) {
+        fg.ingredientsUsed = req.body.ingredientsUsed;
+      }
+      const updatedFG = await fg.save();
+      res.json(updatedFG);
+    } else {
+      // FG with the recipeName does not exist, create new FG
+      const newFG = new FG({
+        recipeName: req.body.recipeName,
+        TotalWeight: req.body.TotalWeight,
+        ingredientsUsed: req.body.ingredientsUsed
+      });
+      await newFG.save();
+      res.status(201).json(newFG);
     }
-    if (req.body.TotalWeight != null) {
-      fg.TotalWeight = req.body.TotalWeight;
-    }
-    if (req.body.ingredientsUsed != null) {
-      fg.ingredientsUsed = req.body.ingredientsUsed;
-    }
-
-    const updatedFG = await fg.save();
-    res.json(updatedFG);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// Delete FG
-exports.deleteFG = async (req, res) => {
+// Delete FG by recipeName
+exports.deleteFGByRecipeName = async (req, res) => {
   try {
-    const fg = await FG.findById(req.params.id);
+    const fg = await FG.findOne({ recipeName: req.params.recipeName });
     if (fg == null) {
       return res.status(404).json({ message: 'FG not found' });
     }

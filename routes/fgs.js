@@ -3,19 +3,19 @@ const router = express.Router();
 const fgController = require('../controllers/fgController');
 
 // Get all FGs
-router.get('/', fgController.getAllFGs);
-
+router.route('/').get(fgController.getAllFGs);
+//router.route('/').post(finalProductController.createFinalProduct);
 // Get FG by ID
-router.get('/:id', fgController.getFGById);
+router.route('/:recipeName').get(fgController.getFGByRecipeName);
 
 // Create new FG
-router.post('/', fgController.createFG);
+router.route('/').post(fgController.createFG);
 
 // Update FG
-router.put('/:id', fgController.updateFG);
+router.route('/:id').put(fgController.updateFG);
 
 // Delete FG
-router.delete('/:id', fgController.deleteFG);
+router.route('/:recipeName').delete(fgController.deleteFGByRecipeName);
 
 
 

@@ -10,10 +10,10 @@ exports.getAllPackages = async (req, res) => {
   }
 };
 
-// Get Package by ID
-exports.getPackageById = async (req, res) => {
+// Get Package by name
+exports.getPackageByName = async (req, res) => {
   try {
-    const package = await Package.findById(req.params.id);
+    const package = await Package.findOne({ name: req.params.name.toLowerCase() });
     if (package == null) {
       return res.status(404).json({ message: 'Package not found' });
     }
@@ -39,10 +39,10 @@ exports.createPackage = async (req, res) => {
   }
 };
 
-// Update Package
-exports.updatePackage = async (req, res) => {
+// Update Package by name
+exports.updatePackageByName = async (req, res) => {
   try {
-    const package = await Package.findById(req.params.id);
+    const package = await Package.findOne({ name: req.params.name.toLowerCase() });
     if (package == null) {
       return res.status(404).json({ message: 'Package not found' });
     }
@@ -64,10 +64,10 @@ exports.updatePackage = async (req, res) => {
   }
 };
 
-// Delete Package
-exports.deletePackage = async (req, res) => {
+// Delete Package by name
+exports.deletePackageByName = async (req, res) => {
   try {
-    const package = await Package.findById(req.params.id);
+    const package = await Package.findOne({ name: req.params.name.toLowerCase() });
     if (package == null) {
       return res.status(404).json({ message: 'Package not found' });
     }
