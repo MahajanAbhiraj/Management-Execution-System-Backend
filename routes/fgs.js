@@ -17,4 +17,7 @@ router.put('/:id', fgController.updateFG);
 // Delete FG
 router.delete('/:id', fgController.deleteFG);
 
+
+
+
 module.exports = router;
