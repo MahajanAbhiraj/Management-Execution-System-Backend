@@ -27,8 +27,7 @@ exports.getFGByRecipeName = async (req, res) => {
 exports.createFG = async (req, res) => {
   const fg = new FG({
     recipeName: req.body.recipeName,
-    TotalWeight: req.body.TotalWeight,
-    ingredientsUsed: req.body.ingredientsUsed
+    TotalWeight: req.body.TotalWeight
   });
 
   try {
@@ -47,17 +46,14 @@ exports.updateFG = async (req, res) => {
     if (fg) {
       // FG with the recipeName exists, update TotalWeight
       fg.TotalWeight += req.body.TotalWeight;
-      if (req.body.ingredientsUsed != null) {
-        fg.ingredientsUsed = req.body.ingredientsUsed;
-      }
+      
       const updatedFG = await fg.save();
       res.json(updatedFG);
     } else {
       // FG with the recipeName does not exist, create new FG
       const newFG = new FG({
         recipeName: req.body.recipeName,
-        TotalWeight: req.body.TotalWeight,
-        ingredientsUsed: req.body.ingredientsUsed
+        TotalWeight: req.body.TotalWeight
       });
       await newFG.save();
       res.status(201).json(newFG);
