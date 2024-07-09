@@ -9,7 +9,7 @@ router.route('/').post(recipeController.createRecipe);
 router.route('/').get(recipeController.getAllRecipes);
 //router.route('/:name').get(recipeController.getRecipeByName);
 router.route('/:id').get(recipeController.getRecipeById);
-
+router.route('/name/:name').get(recipeController.getRecipeByName);
 // Get a specific recipe by ID
 // Update a specific recipe by ID
 router.route('/:name').patch(recipeController.updateRecipeByName);

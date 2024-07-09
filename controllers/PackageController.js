@@ -11,9 +11,9 @@ exports.getAllPackages = async (req, res) => {
 };
 
 // Get Package by name
-exports.getPackageByName = async (req, res) => {
+exports.getPackageById = async (req, res) => {
   try {
-    const package = await Package.findOne({ name: req.params.name.toLowerCase() });
+    const package = await Package.findById(req.params.id);
     if (package == null) {
       return res.status(404).json({ message: 'Package not found' });
     }

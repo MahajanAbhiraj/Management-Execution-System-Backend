@@ -61,6 +61,18 @@ exports.getRecipeById = async (req, res) => {
   }
 };
 
+exports.getRecipeByName =async (req, res) => {
+  try {
+    const recipe = await Recipe.findOne({ name: req.params.name.toLowerCase() });
+    if (!recipe) {
+      return res.status(404).send({ error: 'Recipe not found' });
+    }
+    res.status(200).send(recipe);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 // Update a specific recipe by name
 exports.updateRecipeByName = async (req, res) => {
   try {

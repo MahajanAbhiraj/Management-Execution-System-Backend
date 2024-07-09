@@ -6,7 +6,7 @@ const packageController = require('../controllers/PackageController');
 router.route('/').get(packageController.getAllPackages);
 
 // Get Package by ID
-router.route('/:name').get(packageController.getPackageByName);
+router.route('/:id').get(packageController.getPackageById);
 
 // Create new Package
 router.route('/').post(packageController.createPackage);
