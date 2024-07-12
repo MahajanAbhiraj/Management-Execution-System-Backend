@@ -6,15 +6,15 @@ const packageLogController = require('../controllers/packagelogController');
 router.route('/').get(packageLogController.getAllPackageLogs);
 
 // Get PackageLog by name
-router.route('/:name').get(packageLogController.getPackageLogByName);
+router.route('/:id').get(packageLogController.getPackageLogById);
 
 // Create new PackageLog
 router.route('/').post(packageLogController.createPackageLog);
 
 // Update PackageLog by name
-router.route('/:id').patch(packageLogController.updatePackageLogbyId);
+router.route('/:id').put(packageLogController.updatePackageLogById);
 
 // Delete PackageLog by name
-router.route('/:name').delete(packageLogController.deletePackageLogByName);
+router.route('/:id').delete(packageLogController.deletePackageLogById);
 
 module.exports = router;

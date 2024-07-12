@@ -1,4 +1,5 @@
 const PackageLog = require('../models/packagelog');
+const Package = require('../models/Package');
 
 // Get all PackageLogs
 exports.getAllPackageLogs = async (req, res) => {
@@ -15,11 +16,11 @@ exports.getAllPackageLogs = async (req, res) => {
   }
 };
 
-// Get PackageLog by name
-exports.getPackageLogByName = async (req, res) => {
+// Get PackageLog by ID
+exports.getPackageLogById = async (req, res) => {
   try {
-    const packageLog = await PackageLog.findOne({ name: req.params.name.toLowerCase() });
-    if (packageLog == null) {
+    const packageLog = await PackageLog.findById(req.params.id);
+    if (!packageLog) {
       return res.status(404).json({ message: 'PackageLog not found' });
     }
     res.json(packageLog);
@@ -30,11 +31,17 @@ exports.getPackageLogByName = async (req, res) => {
 
 // Create new PackageLog
 exports.createPackageLog = async (req, res) => {
+  const { Name, Expected_Quantity, Obtained_Quantity, batchcode, approved } = req.body;
+  if (!Name || !Expected_Quantity || !batchcode) {
+    return res.status(400).json({ message: 'Name, Expected_Quantity, and batchcode are required' });
+  }
+
   const packageLog = new PackageLog({
-    Name: req.body.Name,
-    Weight: req.body.Weight,
-    batchcode:req.body.batchcode,
-    approved: req.body.approved
+    Name,
+    Expected_Quantity,
+    Obtained_Quantity,
+    batchcode,
+    approved
   });
 
   try {
@@ -45,29 +52,45 @@ exports.createPackageLog = async (req, res) => {
   }
 };
 
-// Update PackageLog by name
-exports.updatePackageLogbyId = async (req, res) => {
+// Update PackageLog by ID
+exports.updatePackageLogById = async (req, res) => {
   try {
-    const packageLog = await PackageLog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const packageLog = await PackageLog.findById(req.params.id);
     if (!packageLog) {
-      return res.status(404).json({ message: 'Final product not found' });
+      return res.status(404).json({ message: 'PackageLog not found' });
     }
-    res.status(200).json(packageLog);
+
+    const { Name, Expected_Quantity, Obtained_Quantity, batchcode, approved } = req.body;
+
+    if (Name != null) packageLog.Name = Name;
+    if (Expected_Quantity != null) packageLog.Expected_Quantity = Expected_Quantity;
+    if (Obtained_Quantity != null) packageLog.Obtained_Quantity = Obtained_Quantity;
+    if (batchcode != null) packageLog.batchcode = batchcode;
+    if (approved != null) packageLog.approved = approved;
+
+    // Calculate Error
+    const packageData = await Package.findOne({ name: packageLog.Name });
+    if (packageData) {
+      const weight = packageData.weight;
+      packageLog.Error = (packageLog.Expected_Quantity - packageLog.Obtained_Quantity) * weight;
+    } else {
+      packageLog.Error = packageLog.Expected_Quantity - packageLog.Obtained_Quantity; // Default to difference if no package found
+    }
+
+    const updatedPackageLog = await packageLog.save();
+    res.json(updatedPackageLog);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
-  
 
-// Delete PackageLog by name
-exports.deletePackageLogByName = async (req, res) => {
+// Delete PackageLog by ID
+exports.deletePackageLogById = async (req, res) => {
   try {
-    const packageLog = await PackageLog.findOne({ name: req.params.name.toLowerCase() });
-    if (packageLog == null) {
+    const result = await PackageLog.findByIdAndDelete(req.params.id);
+    if (!result) {
       return res.status(404).json({ message: 'PackageLog not found' });
     }
-
-    await packageLog.remove();
     res.json({ message: 'Deleted PackageLog' });
   } catch (error) {
     res.status(500).json({ message: error.message });
