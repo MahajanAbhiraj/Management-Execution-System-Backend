@@ -1,19 +1,14 @@
 const mongoose = require('mongoose');
 
 const packageLogSchema = new mongoose.Schema({
-  name: { type: String, required: true, lowercase: true },
-  weight: { type: Number, required: true },
-  products: [
-    {
-      recipe: { type: String, required: true, lowercase: true }, // Storing ingredient name directly
-      quantity: { type: Number, required: true }
-    }
-  ],
-  approved: { type: Boolean, required: true, default: false }
+  Name: { type: String, required: true},
+  Weight: { type: Number, required: true },
+  batchcode: { type: String, required: true },
+  approved: { type: Boolean, required: false, default: false }
 });
 
 packageLogSchema.pre('save', function(next) {
-  this.name = this.name.trim();
+  this.Name = this.Name.trim();
   next();
 });
 

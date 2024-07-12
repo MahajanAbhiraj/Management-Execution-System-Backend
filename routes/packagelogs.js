@@ -12,7 +12,7 @@ router.route('/:name').get(packageLogController.getPackageLogByName);
 router.route('/').post(packageLogController.createPackageLog);
 
 // Update PackageLog by name
-router.route('/:name').put(packageLogController.updatePackageLogByName);
+router.route('/:id').patch(packageLogController.updatePackageLogbyId);
 
 // Delete PackageLog by name
 router.route('/:name').delete(packageLogController.deletePackageLogByName);

@@ -12,7 +12,7 @@ router.route('/:id').get(packageController.getPackageById);
 router.route('/').post(packageController.createPackage);
 
 // Update Package
-router.route('/:id').put(packageController.updatePackageByName);
+router.route('/:id').put(packageController.updatePackageById);
 
 // Delete Package
 router.route('/:name').delete(packageController.deletePackageByName);

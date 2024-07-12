@@ -10,7 +10,7 @@ exports.getAllPackages = async (req, res) => {
   }
 };
 
-// Get Package by name
+// Get Package by ID
 exports.getPackageById = async (req, res) => {
   try {
     const package = await Package.findById(req.params.id);
@@ -39,10 +39,10 @@ exports.createPackage = async (req, res) => {
   }
 };
 
-// Update Package by name
-exports.updatePackageByName = async (req, res) => {
+// Update Package by ID
+exports.updatePackageById = async (req, res) => {
   try {
-    const package = await Package.findOne({ name: req.params.name.toLowerCase() });
+    const package = await Package.findById(req.params.id);
     if (package == null) {
       return res.status(404).json({ message: 'Package not found' });
     }
