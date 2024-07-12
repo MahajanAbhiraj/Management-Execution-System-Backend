@@ -13,7 +13,7 @@ router.route('/:recipeName').get(fgController.getFGByRecipeName);
 router.route('/').post(fgController.createFG);
 
 // Update FG
-router.route('/:recipeName').put(fgController.updateFG);
+router.route('/').put(fgController.updateFG);
 
 // Delete FG
 router.route('/:recipeName').delete(fgController.deleteFGByRecipeName);
