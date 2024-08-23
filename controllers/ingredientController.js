@@ -1,4 +1,32 @@
 const Ingredient = require('../models/Ingredient');
+const nodemailer = require('nodemailer');
+
+// Configure your email transport service
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // or any other service provider
+  auth: {
+    user: 'abhi70288@gmail.com',
+    pass: 'alulhzzisovglgby',
+  },
+});
+
+// Function to send an email
+function sendEmail(ingredient, quantity) {
+  const mailOptions = {
+    from: 'abhi70288@gmail.com',
+    to: 'mahajanabhiraj9@gmail.com',
+    subject: 'Ingredient Quantity Alert',
+    text: `The quantity of ${ingredient} has exceeded the limit. Current quantity: ${quantity}`,
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
 
 // Create a new ingredient or update if exists
 exports.createOrUpdateIngredient = async (req, res) => {
@@ -43,6 +71,10 @@ exports.updateIngredientByName = async (req, res) => {
     updateData.name = updateData.name ? updateData.name.trim() : updateData.name;
 
     const ingredient = await Ingredient.findOneAndUpdate({ name }, updateData, { new: true, runValidators: true });
+    if(ingredient.quantity<100)
+    {
+      sendEmail(ingredient.name,ingredient.quantity);
+    }
     if (!ingredient) {
       return res.status(404).send({ error: 'Ingredient not found' });
     }
